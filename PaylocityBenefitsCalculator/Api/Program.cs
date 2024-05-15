@@ -1,3 +1,4 @@
+using Api.Repositories;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,9 @@ builder.Services.AddSwaggerGen(c =>
         Description = "Api to support employee benefit cost calculations"
     });
 });
+
+// Configure the DI
+builder.Services.AddScoped<Api.Repositories.IPeopleRepository, PeopleRepository>();
 
 var allowLocalhost = "allow localhost";
 builder.Services.AddCors(options =>

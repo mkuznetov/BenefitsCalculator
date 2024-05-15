@@ -10,12 +10,7 @@ namespace ApiTests.IntegrationTests;
 
 public class DependentIntegrationTests : IntegrationTest
 {
-    [Fact]
-    //task: make test pass
-    public async Task WhenAskedForAllDependents_ShouldReturnAllDependents()
-    {
-        var response = await HttpClient.GetAsync("/api/v1/dependents");
-        var dependents = new List<GetDependentDto>
+    private List<GetDependentDto> _dependents = new List<GetDependentDto>
         {
             new()
             {
@@ -50,11 +45,15 @@ public class DependentIntegrationTests : IntegrationTest
                 DateOfBirth = new DateTime(1974, 1, 2)
             }
         };
-        await response.ShouldReturn(HttpStatusCode.OK, dependents);
+
+    [Fact]
+    public async Task WhenAskedForAllDependents_ShouldReturnAllDependents()
+    {
+        var response = await HttpClient.GetAsync("/api/v1/dependents");
+        await response.ShouldReturn(HttpStatusCode.OK, _dependents);
     }
 
     [Fact]
-    //task: make test pass
     public async Task WhenAskedForADependent_ShouldReturnCorrectDependent()
     {
         var response = await HttpClient.GetAsync("/api/v1/dependents/1");
@@ -70,11 +69,16 @@ public class DependentIntegrationTests : IntegrationTest
     }
 
     [Fact]
-    //task: make test pass
-    public async Task WhenAskedForANonexistentDependent_ShouldReturn404()
+    public async Task WhenAskedForADependentWithInvalidId_ShouldReturn404()
     {
-        var response = await HttpClient.GetAsync($"/api/v1/dependents/{int.MinValue}");
-        await response.ShouldReturn(HttpStatusCode.NotFound);
+        var response = await HttpClient.GetAsync($"/api/v1/dependents/not-a-number");
+        await response.ShouldReturn(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task WhenAskedForAInvalidDependent_ShouldReturn404()
+    {
+        var response = await HttpClient.GetAsync($"/api/v1/dependents/{(long)(int.MaxValue) + 1}");
+        await response.ShouldReturn(HttpStatusCode.BadRequest);
     }
 }
-

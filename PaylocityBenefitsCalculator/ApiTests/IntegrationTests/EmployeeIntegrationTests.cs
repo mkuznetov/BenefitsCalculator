@@ -11,13 +11,9 @@ namespace ApiTests.IntegrationTests;
 
 public class EmployeeIntegrationTests : IntegrationTest
 {
-    [Fact]
-    public async Task WhenAskedForAllEmployees_ShouldReturnAllEmployees()
-    {
-        var response = await HttpClient.GetAsync("/api/v1/employees");
-        var employees = new List<GetEmployeeDto>
+    private List<GetEmployeeDto> _employees = new List<GetEmployeeDto>
         {
-            new()
+            new ()
             {
                 Id = 1,
                 FirstName = "LeBron",
@@ -25,7 +21,7 @@ public class EmployeeIntegrationTests : IntegrationTest
                 Salary = 75420.99m,
                 DateOfBirth = new DateTime(1984, 12, 30)
             },
-            new()
+            new ()
             {
                 Id = 2,
                 FirstName = "Ja",
@@ -34,7 +30,7 @@ public class EmployeeIntegrationTests : IntegrationTest
                 DateOfBirth = new DateTime(1999, 8, 10),
                 Dependents = new List<GetDependentDto>
                 {
-                    new()
+                    new ()
                     {
                         Id = 1,
                         FirstName = "Spouse",
@@ -80,11 +76,15 @@ public class EmployeeIntegrationTests : IntegrationTest
                 }
             }
         };
-        await response.ShouldReturn(HttpStatusCode.OK, employees);
+
+    [Fact]
+    public async Task WhenAskedForAllEmployees_ShouldReturnAllEmployees()
+    {
+        var response = await HttpClient.GetAsync("/api/v1/employees");
+        await response.ShouldReturn(HttpStatusCode.OK, _employees);
     }
 
     [Fact]
-    //task: make test pass
     public async Task WhenAskedForAnEmployee_ShouldReturnCorrectEmployee()
     {
         var response = await HttpClient.GetAsync("/api/v1/employees/1");
@@ -98,13 +98,25 @@ public class EmployeeIntegrationTests : IntegrationTest
         };
         await response.ShouldReturn(HttpStatusCode.OK, employee);
     }
-    
+
     [Fact]
-    //task: make test pass
     public async Task WhenAskedForANonexistentEmployee_ShouldReturn404()
     {
         var response = await HttpClient.GetAsync($"/api/v1/employees/{int.MinValue}");
         await response.ShouldReturn(HttpStatusCode.NotFound);
     }
-}
 
+    [Fact]
+    public async Task WhenAskedForAnEmployeeWithInvalidId_ShouldReturn400()
+    {
+        var response = await HttpClient.GetAsync($"/api/v1/employees/not-a-number");
+        await response.ShouldReturn(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task WhenAskedForAnEmployeeWithIdExceedingMaximum_ShouldReturn400()
+    {
+        var response = await HttpClient.GetAsync($"/api/v1/employees/{(long)(int.MaxValue) + 1}");
+        await response.ShouldReturn(HttpStatusCode.BadRequest);
+    }
+}
