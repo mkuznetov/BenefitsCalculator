@@ -21,7 +21,7 @@ public class DependentsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ApiResponse<GetDependentDto>>> Get(int id)
     {
-        var dependent = _peopleRepository.GetDependentById(id);
+        var dependent = _peopleRepository.GetDependentById(id); // in production, this should be an async call (await)
         return (dependent != null) ?
             new ApiResponse<GetDependentDto>
             {
@@ -36,7 +36,7 @@ public class DependentsController : ControllerBase
     {
         var result = new ApiResponse<List<GetDependentDto>>
         {
-            Data = _peopleRepository.GetDependents(),
+            Data = _peopleRepository.GetDependents(),  // in production, this should be an async call (await)
             Success = true,
         };
 

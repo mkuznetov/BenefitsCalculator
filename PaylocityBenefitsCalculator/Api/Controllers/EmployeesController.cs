@@ -21,7 +21,7 @@ public class EmployeesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ApiResponse<GetEmployeeDto>>> Get(int id)
     {
-        var employee = _peopleRepository.GetEmployeeById(id);
+        var employee = _peopleRepository.GetEmployeeById(id); // in production, this should be an async call (await)
         return (employee != null) ?
             new ApiResponse<GetEmployeeDto>
             {
@@ -36,7 +36,7 @@ public class EmployeesController : ControllerBase
     {
         var result = new ApiResponse<List<GetEmployeeDto>>
         {
-            Data = _peopleRepository.GetEmployees(),
+            Data = _peopleRepository.GetEmployees(), // in production, this should be an async call (await)
             Success = true,
         };
 

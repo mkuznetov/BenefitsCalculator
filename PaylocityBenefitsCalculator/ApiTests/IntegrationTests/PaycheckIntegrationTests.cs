@@ -4,12 +4,13 @@ using System.Net;
 using System.Threading.Tasks;
 using Api.Dtos.Dependent;
 using Api.Dtos.Employee;
+using Api.Dtos.PayCheck;
 using Api.Models;
 using Xunit;
 
 namespace ApiTests.IntegrationTests;
 
-public class EmployeeIntegrationTests : IntegrationTest
+public class PaycheckIntegrationTests : IntegrationTest
 {
     private List<GetEmployeeDto> _employees = new List<GetEmployeeDto>
         {
@@ -78,47 +79,54 @@ public class EmployeeIntegrationTests : IntegrationTest
         };
 
     [Fact]
-    public async Task WhenAskedForAllEmployees_ShouldReturnAllEmployees()
+    public async Task PaycheckOfEmployee1_ShouldReturnCorrectAmount()
     {
-        var response = await HttpClient.GetAsync("/api/v1/employees");
-        await response.ShouldReturn(HttpStatusCode.OK, _employees);
+        var response = await HttpClient.GetAsync("/api/v1/paycheck/3");
+        var paycheck = new GetPaycheckDto();
+        // TODO: setup the expectation on paycheck
+        await response.ShouldReturn(HttpStatusCode.OK, paycheck);
     }
 
     [Fact]
-    public async Task WhenAskedForAnEmployee_ShouldReturnCorrectEmployee()
+    public async Task PaycheckOfEmployee2_ShouldReturnCorrectAmount()
     {
-        var response = await HttpClient.GetAsync("/api/v1/employees/1");
-        var employee = new GetEmployeeDto
-        {
-            Id = 1,
-            FirstName = "LeBron",
-            LastName = "James",
-            Salary = 75420.99m,
-            DateOfBirth = new DateTime(1984, 12, 30)
-        };
-        await response.ShouldReturn(HttpStatusCode.OK, employee);
+        var response = await HttpClient.GetAsync("/api/v1/paycheck/2");
+        var paycheck = new GetPaycheckDto();
+        // TODO: setup the expectation on paycheck
+        await response.ShouldReturn(HttpStatusCode.OK, paycheck);
     }
 
+
     [Fact]
-    public async Task WhenAskedForANonexistentEmployee_ShouldReturn404()
+    public async Task PaycheckOfEmployee3_ShouldReturnCorrectAmount()
     {
-        var response = await HttpClient.GetAsync($"/api/v1/employees/{int.MinValue}");
+        var response = await HttpClient.GetAsync("/api/v1/paycheck/3");
+        var paycheck = new GetPaycheckDto();
+        // TODO: setup the expectation on paycheck
+        await response.ShouldReturn(HttpStatusCode.OK, paycheck);
+    }
+
+    // Additional test for validating invalid input
+    [Fact]
+    public async Task WhenAskedForAPaycheckForNonExistingEmployee_ShouldReturn404()
+    {
+        var response = await HttpClient.GetAsync($"/api/v1/paycheck/{int.MinValue}");
         await response.ShouldReturn(HttpStatusCode.NotFound);
     }
 
     // Additional test for validating invalid input
     [Fact]
-    public async Task WhenAskedForAnEmployeeWithInvalidId_ShouldReturn400()
+    public async Task WhenAskedForAPaycheckWithInvalidEmployeeId_ShouldReturn400()
     {
-        var response = await HttpClient.GetAsync($"/api/v1/employees/not-a-number");
+        var response = await HttpClient.GetAsync($"/api/v1/paycheck/not-a-number");
         await response.ShouldReturn(HttpStatusCode.BadRequest);
     }
 
     // Additional test for validating invalid input
     [Fact]
-    public async Task WhenAskedForAnEmployeeWithIdExceedingMaximum_ShouldReturn400()
+    public async Task WhenAskedForAPaycheckForEmployeeWithIdExceedingMaximum_ShouldReturn400()
     {
-        var response = await HttpClient.GetAsync($"/api/v1/employees/{(long)(int.MaxValue) + 1}");
+        var response = await HttpClient.GetAsync($"/api/v1/paycheck/{(long)(int.MaxValue) + 1}");
         await response.ShouldReturn(HttpStatusCode.BadRequest);
     }
 }

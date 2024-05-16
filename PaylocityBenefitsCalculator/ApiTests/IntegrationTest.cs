@@ -3,6 +3,8 @@ using System.Net.Http;
 
 namespace ApiTests;
 
+// In the future, extend the test suite with unit tests of the controllers with the mock of repository
+
 public class IntegrationTest : IDisposable
 {
     private HttpClient? _httpClient;

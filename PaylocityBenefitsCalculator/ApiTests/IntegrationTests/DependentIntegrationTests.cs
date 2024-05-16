@@ -68,6 +68,7 @@ public class DependentIntegrationTests : IntegrationTest
         await response.ShouldReturn(HttpStatusCode.OK, dependent);
     }
 
+    // Additional test for validating invalid input
     [Fact]
     public async Task WhenAskedForADependentWithInvalidId_ShouldReturn404()
     {
@@ -75,6 +76,7 @@ public class DependentIntegrationTests : IntegrationTest
         await response.ShouldReturn(HttpStatusCode.BadRequest);
     }
 
+    // Additional test for validating invalid input
     [Fact]
     public async Task WhenAskedForAInvalidDependent_ShouldReturn404()
     {
