@@ -11,8 +11,10 @@ namespace ApiTests.IntegrationTests;
 
 public class PaycheckIntegrationTests : IntegrationTest
 {
-    private IBenefitsCalculator calculator = new BenefitsCalculator(); // Use the DI instead of explicit creation
+    // TODO: use the DI instead of explicit creation
+    private IBenefitsCalculator calculator = new BenefitsCalculator();
 
+    // TODO: setup the mock with the use of some mocking library
     private List<GetEmployeeDto> _employees = new List<GetEmployeeDto>
         {
             new ()

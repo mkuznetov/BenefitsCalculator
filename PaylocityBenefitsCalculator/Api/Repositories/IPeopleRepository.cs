@@ -9,6 +9,5 @@ namespace Api.Repositories
         List<GetEmployeeDto> GetEmployees();
         GetDependentDto GetDependentById(int id);
         List<GetDependentDto> GetDependents();
-
     }
 }

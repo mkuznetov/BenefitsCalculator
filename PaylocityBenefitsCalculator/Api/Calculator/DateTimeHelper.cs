@@ -7,7 +7,7 @@ namespace Api.Calculator
         {
             int age = DateTime.Today.Year - birthDate.Year; // maybe adjust "Today" to the specific timezone (UTC)
             if (birthDate > DateTime.Today.AddYears(-age)) age--;
-            return age > maxAge;
+            return age >= maxAge;
         }
     }
 }
