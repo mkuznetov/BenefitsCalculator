@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Api.Dtos.Dependent;
 using Api.Dtos.Employee;
-using Api.Dtos.PayCheck;
 using Api.Models;
 using Xunit;
 
@@ -12,6 +11,8 @@ namespace ApiTests.IntegrationTests;
 
 public class PaycheckIntegrationTests : IntegrationTest
 {
+    private IBenefitsCalculator calculator = new BenefitsCalculator(); // Use the DI instead of explicit creation
+
     private List<GetEmployeeDto> _employees = new List<GetEmployeeDto>
         {
             new ()
@@ -79,33 +80,14 @@ public class PaycheckIntegrationTests : IntegrationTest
         };
 
     [Fact]
-    public async Task PaycheckOfEmployee1_ShouldReturnCorrectAmount()
+    public async Task PaycheckOfEveryEmployee1_ShouldReturnCorrectAmount()
     {
-        var response = await HttpClient.GetAsync("/api/v1/paycheck/3");
-        var paycheck = new GetPaycheckDto
+        foreach (var employee in _employees)
         {
-
-        };
-        // TODO: setup the expectation on paycheck
-        await response.ShouldReturn(HttpStatusCode.OK, paycheck);
-    }
-
-    [Fact]
-    public async Task PaycheckOfEmployee2_ShouldReturnCorrectAmount()
-    {
-        var response = await HttpClient.GetAsync("/api/v1/paycheck/2");
-        var paycheck = new GetPaycheckDto();
-        // TODO: setup the expectation on paycheck
-        await response.ShouldReturn(HttpStatusCode.OK, paycheck);
-    }
-
-    [Fact]
-    public async Task PaycheckOfEmployee3_ShouldReturnCorrectAmount()
-    {
-        var response = await HttpClient.GetAsync("/api/v1/paycheck/3");
-        var paycheck = new GetPaycheckDto();
-        // TODO: setup the expectation on paycheck
-        await response.ShouldReturn(HttpStatusCode.OK, paycheck);
+            var response = await HttpClient.GetAsync($"/api/v1/paycheck/{employee.Id}");
+            var paycheck = calculator.CalculatePaycheckForEmployee(employee);
+            await response.ShouldReturn(HttpStatusCode.OK, paycheck);
+        }
     }
 
     // Additional test for validating invalid input

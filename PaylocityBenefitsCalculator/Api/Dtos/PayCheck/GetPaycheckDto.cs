@@ -15,13 +15,12 @@ public class GetPaycheckDto
     // Base deduction (as per 2 weeks)
     public decimal BaseCost { get; set; }
 
-    // (optional) List of base costs (as per 2 weeks) associated with all the dependents
-    public List<decimal> DependentCosts { get; } = new List<decimal>();
+    // (optional) Cumulative deduction for all the dependents (as per 2 weeks)
+    public decimal DependentsCost { get; set; }
 
     // (optional) Deduction for high salary (as per 2 weeks)
     public decimal HighSalaryTwoPercentDeduction { get; set; }
 
     // The total cost must stay positive after appying all the deductions
-    public decimal Total => Salary
-        - BaseCost - DependentCosts.Sum() - HighSalaryTwoPercentDeduction;
+    public decimal Total => Salary - BaseCost - DependentsCost - HighSalaryTwoPercentDeduction;
 }
