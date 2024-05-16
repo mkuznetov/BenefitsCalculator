@@ -82,7 +82,10 @@ public class PaycheckIntegrationTests : IntegrationTest
     public async Task PaycheckOfEmployee1_ShouldReturnCorrectAmount()
     {
         var response = await HttpClient.GetAsync("/api/v1/paycheck/3");
-        var paycheck = new GetPaycheckDto();
+        var paycheck = new GetPaycheckDto
+        {
+
+        };
         // TODO: setup the expectation on paycheck
         await response.ShouldReturn(HttpStatusCode.OK, paycheck);
     }
@@ -95,7 +98,6 @@ public class PaycheckIntegrationTests : IntegrationTest
         // TODO: setup the expectation on paycheck
         await response.ShouldReturn(HttpStatusCode.OK, paycheck);
     }
-
 
     [Fact]
     public async Task PaycheckOfEmployee3_ShouldReturnCorrectAmount()

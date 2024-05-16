@@ -85,7 +85,8 @@ namespace Api.Repositories
             // In production, cached employees and the dependents probably have to be lazily populated
             foreach (var employee in _employees)
             {
-                // Validate the employee fits the business requirements
+                // Validate the employee fits the business requirements:
+                //   - no more than 1 spouse or domestic partner
                 if (employee.Dependents.Count(
                     d => d.Relationship == Relationship.Spouse || d.Relationship == Relationship.DomesticPartner)
                     > 1)
@@ -93,13 +94,15 @@ namespace Api.Repositories
                     // Log the error and skip
                     continue;
                 }
-                if (!_idsToEmployees.TryAdd(employee.Id, employee)) // Validating there is no collision on IDs
+                // All employees must have unique IDs
+                if (!_idsToEmployees.TryAdd(employee.Id, employee))
                 {
                     // Log the error and skip
                 }
+                // Assuming all dependents must have unique IDs
                 foreach (var dependent in employee.Dependents)
                 {
-                    if (!_idsToDependents.TryAdd(dependent.Id, dependent)) // Validating there is no collision on IDs
+                    if (!_idsToDependents.TryAdd(dependent.Id, dependent))
                     {
                         // Log the error and skip
                     }

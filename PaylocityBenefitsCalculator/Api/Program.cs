@@ -20,7 +20,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Configure the DI
-builder.Services.AddScoped<Api.Repositories.IPeopleRepository, PeopleRepository>();
+builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
+builder.Services.AddScoped<IBenefitsCalculator, BenefitsCalculator>();
 
 var allowLocalhost = "allow localhost";
 builder.Services.AddCors(options =>

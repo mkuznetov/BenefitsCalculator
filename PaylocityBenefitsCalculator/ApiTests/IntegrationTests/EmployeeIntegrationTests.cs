@@ -74,7 +74,7 @@ public class EmployeeIntegrationTests : IntegrationTest
                         DateOfBirth = new DateTime(1974, 1, 2)
                     }
                 }
-            }
+            },
         };
 
     [Fact]
